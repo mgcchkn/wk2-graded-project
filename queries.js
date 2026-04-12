@@ -5,145 +5,189 @@ import Answer from "./models/Answer.js";
 import dotenv from "dotenv";
 
 async function query1() {
-  // Write code for Query 1 here
+  const createUser = await User.create({
+    name: "Robin",
+    email: "robin@example.com",
+    password: "hashed_password_7",
+    createdAt: new Date("2025-06-25T10:15:00Z")
+  });
+  console.log("Created user:", createUser);
 }
 
 async function query2() {
-  // Write code for Query 2 here
+  const fetchedUser = await User.findOne({ email: "alice@example.com" });
+  console.log("User:", fetchedUser);
 }
 
 async function query3() {
-  // Write code for Query 3 here
+  const fetchedQuestion = await Question.findOne({
+    title: "How can I improve the performance of a react app?"
+  });
+  console.log("Question:", fetchedQuestion);
 }
 
 async function query4() {
-  // Write code for Query 4 here
+  const questionsWithTag = await Question.find({ tags: "javascript" });
+  console.log('"javascript" tagged questions:', questionsWithTag);
 }
 
 async function query5() {
-  // Write code for Query 5 here
+  const questionsAfterDate = await Question.find({ createdAt: { $gt: new Date("2023-04-01") } });
+  console.log("Questions after April 1, 2023:", questionsAfterDate);
 }
 
 async function query6() {
-  // Write code for Query 6 here
+  const questionsWithTags = await Question.find({ tags: { $in: ["javascript", "react"] } });
+  console.log('"javascript" or "react" tagged questions:', questionsWithTags);
 }
 
 async function query7() {
-  // Write code for Query 7 here
+  const distinctTags = await Question.distinct("tags");
+  console.log("Distinct tags:", distinctTags);
 }
 
 async function query8() {
-  // Write code for Query 8 here
+  const questionsWithViews = await Question.find({ views: { $gte: 50 } });
+  console.log("50 or more views:", questionsWithViews);
 }
 
 async function query9() {
-  // Write code for Query 9 here
+  const zeroVotes = await Answer.find({ voteCount: 0 });
+  console.log("Zero votes:", zeroVotes);
 }
 
 async function query10() {
-  // Write code for Query 10 here
+  const answersWithVotes = await Answer.find({ voteCount: { $gt: 0 } });
+  console.log("Answers with votes:", answersWithVotes);
 }
 
 async function query11() {
-  // Write code for Query 11 here
+  const usersInRange = await User.find({ createdAt: { $gte: new Date("2023-01-01"), $lt: new Date("2023-05-01") } });
+  console.log("Users created between January 1, 2023 and May 1, 2023:", usersInRange);
 }
 
 async function query12() {
-  // Write code for Query 12 here
+  const question = await Question.findOne({ title: "How do I set up routing with react router v6?" });
+  const answers = await Answer.find({ questionId: question._id }).select("answerText author");
+  console.log("Answers:", answers);
 }
 
 async function query13() {
-  // Write code for Query 13 here
+  const usersWithAnswers = await Answer.distinct("author");
+  const usersWithoutAnswers = await User.find({ _id: { $nin: usersWithAnswers } });
+  console.log("Users with no answers:", usersWithoutAnswers);
 }
 
 async function query14() {
-  // Write code for Query 14 here
+  const topQuestions = await Question.find().sort({ voteCount: -1 }).limit(2);
+  console.log("Two most upvoted questions:", topQuestions);
 }
 
 async function query15() {
-  // Write code for Query 15 here
+  const userAnswerCounts = await Answer.aggregate([
+    { $group: { _id: "$author", answerCount: { $sum: 1 } } }
+  ]);
+  console.log("User IDs and their answer counts:", userAnswerCounts);
 }
 
 async function query16() {
-  // Write code for Query 16 here
+  const topUsers = await Answer.aggregate([
+    { $group: { _id: "$author", answerCount: { $sum: 1 } } },
+    { $sort: { answerCount: -1 } },
+    { $limit: 2 }
+  ]);
+  console.log("Top two users with most answers:", topUsers);
 }
 
 async function query17() {
-  // Write code for Query 17 here
+  const updatedQuestion = await Question.findOneAndUpdate(
+    { title: "Why is my async function returning a promise instead of the actual value?" },
+    { $set: { tags: ["javascript", "async"] } },
+    { new: true }
+  );
+  console.log("Updated question tags:", updatedQuestion);
 }
 
 async function query18() {
-  // Write code for Query 18 here
+  const updatedUser = await User.findOneAndUpdate(
+    { email: "alice@example.com" },
+    { $set: { name: "Alice Smith" } },
+    { new: true }
+  );
+  console.log("Updated user name:", updatedUser);
 }
 
 async function query19() {
-  // Write code for Query 19 here
+  const deletedUser = await User.findOneAndDelete({ email: "jhonny@example.com" });
+  console.log("Deleted user:", deletedUser);
 }
 
 async function query20() {
-  // Write code for Query 20 here
+  const user = await User.findOne({ email: "alice@example.com" });
+  const deletedAnswers = await Answer.deleteMany({ author: user._id });
+  console.log("Deleted answers from Alice:", deletedAnswers);
 }
 
 async function runQueries() {
-  printHeader(
-    1,
-    "Create a user with name Robin, email robin@example.com, password hashed_password_7, and createdAt set to 2025-06-25T10:15:00Z",
-  );
-  await query1();
-  printHeader(2, "Fetch the user with email alice@example.com");
-  await query2();
-  printHeader(
-    3,
-    'Fetch question with the title "How can I improve the performance of a react app?"',
-  );
-  await query3();
-  printHeader(4, 'Find all questions tagged with "javascript"');
-  await query4();
-  printHeader(5, "Retrieve all questions posted after April 1, 2023");
-  await query5();
-  printHeader(6, "Find all questions tagged with javascript or react");
-  await query6();
-  printHeader(7, "Find all the distinct tags used in questions");
-  await query7();
-  printHeader(8, "Retrieve all questions with at least 50 views");
-  await query8();
-  printHeader(9, "List all answers with a vote count of 0");
-  await query9();
-  printHeader(10, "Retrieve all answers with a voteCount greater than 0");
-  await query10();
-  printHeader(
-    11,
-    "Retrieve all users whose account was created between January 1, 2023 (inclusive) and May 1, 2023 (exclusive)",
-  );
-  await query11();
-  printHeader(
-    12,
-    'Fetch the answer text and author id of all answers for the question "How do I set up routing with react router v6?"',
-  );
-  await query12();
-  printHeader(13, "Find all users who have not posted any answers");
-  await query13();
-  printHeader(14, "Find the top two most upvoted questions");
-  await query14();
-  printHeader(
-    15,
-    "Retrieve the ids of all users who have posted answers, along with the number of answers they have posted",
-  );
-  await query15();
-  printHeader(16, "Identify the top two users who posted the most answers");
-  await query16();
-  printHeader(
-    17,
-    "Update the tags of the question 'Why is my async function returning a promise instead of the actual value?' to ['javascript', 'async']",
-  );
-  await query17();
-  printHeader(
-    18,
-    "Update the name of the user with email 'alice@example.com' to 'Alice Smith'",
-  );
-  await query18();
-  printHeader(19, "Delete the user with email 'jhonny@example.com'");
-  await query19();
+  // printHeader(
+  //   1,
+  //   "Create a user with name Robin, email robin@example.com, password hashed_password_7, and createdAt set to 2025-06-25T10:15:00Z",
+  // );
+  // await query1();
+  // printHeader(2, "Fetch the user with email alice@example.com");
+  // await query2();
+  // printHeader(
+  //   3,
+  //   'Fetch question with the title "How can I improve the performance of a react app?"',
+  // );
+  // await query3();
+  // printHeader(4, 'Find all questions tagged with "javascript"');
+  // await query4();
+  // printHeader(5, "Retrieve all questions posted after April 1, 2023");
+  // await query5();
+  // printHeader(6, "Find all questions tagged with javascript or react");
+  // await query6();
+  // printHeader(7, "Find all the distinct tags used in questions");
+  // await query7();
+  // printHeader(8, "Retrieve all questions with at least 50 views");
+  // await query8();
+  // printHeader(9, "List all answers with a vote count of 0");
+  // await query9();
+  // printHeader(10, "Retrieve all answers with a voteCount greater than 0");
+  // await query10();
+  // printHeader(
+    // 11,
+    // "Retrieve all users whose account was created between January 1, 2023 (inclusive) and May 1, 2023 (exclusive)",
+  // );
+  // await query11();
+  // printHeader(
+  //   12,
+  //   'Fetch the answer text and author id of all answers for the question "How do I set up routing with react router v6?"',
+  // );
+  // await query12();
+  // printHeader(13, "Find all users who have not posted any answers");
+  // await query13();
+  // printHeader(14, "Find the top two most upvoted questions");
+  // await query14();
+  // printHeader(
+  //   15,
+  //   "Retrieve the ids of all users who have posted answers, along with the number of answers they have posted",
+  // );
+  // await query15();
+  // printHeader(16, "Identify the top two users who posted the most answers");
+  // await query16();
+  // printHeader(
+  //   17,
+  //   "Update the tags of the question 'Why is my async function returning a promise instead of the actual value?' to ['javascript', 'async']",
+  // );
+  // await query17();
+  // printHeader(
+  //   18,
+  //   "Update the name of the user with email 'alice@example.com' to 'Alice Smith'",
+  // );
+  // await query18();
+  // printHeader(19, "Delete the user with email 'jhonny@example.com'");
+  // await query19();
   printHeader(
     20,
     "Delete all answers of the user with email 'alice@example.com'",
