@@ -15,20 +15,20 @@ async function query1() {
 }
 
 async function query2() {
-  const fetchedUser = await User.findOne({ email: "alice@example.com" });
-  console.log("User:", fetchedUser);
+  const fetchUser = await User.findOne({ email: "alice@example.com" });
+  console.log("User:", fetchUser);
 }
 
 async function query3() {
-  const fetchedQuestion = await Question.findOne({
+  const fetchQuestion = await Question.findOne({
     title: "How can I improve the performance of a react app?"
   });
-  console.log("Question:", fetchedQuestion);
+  console.log("Question:", fetchQuestion);
 }
 
 async function query4() {
-  const questionsWithTag = await Question.find({ tags: "javascript" });
-  console.log('"javascript" tagged questions:', questionsWithTag);
+  const withTag = await Question.find({ tags: "javascript" });
+  console.log('"javascript" tagged questions:', withTag);
 }
 
 async function query5() {
@@ -37,8 +37,8 @@ async function query5() {
 }
 
 async function query6() {
-  const questionsWithTags = await Question.find({ tags: { $in: ["javascript", "react"] } });
-  console.log('"javascript" or "react" tagged questions:', questionsWithTags);
+  const withTags = await Question.find({ tags: { $in: ["javascript", "react"] } });
+  console.log('"javascript" or "react" tagged questions:', withTags);
 }
 
 async function query7() {
@@ -47,8 +47,8 @@ async function query7() {
 }
 
 async function query8() {
-  const questionsWithViews = await Question.find({ views: { $gte: 50 } });
-  console.log("50 or more views:", questionsWithViews);
+  const withViews = await Question.find({ views: { $gte: 50 } });
+  console.log("50 or more views:", withViews);
 }
 
 async function query9() {
@@ -57,13 +57,13 @@ async function query9() {
 }
 
 async function query10() {
-  const answersWithVotes = await Answer.find({ voteCount: { $gt: 0 } });
-  console.log("Answers with votes:", answersWithVotes);
+  const withVotes = await Answer.find({ voteCount: { $gt: 0 } });
+  console.log("Answers with votes:", withVotes);
 }
 
 async function query11() {
-  const usersInRange = await User.find({ createdAt: { $gte: new Date("2023-01-01"), $lt: new Date("2023-05-01") } });
-  console.log("Users created between January 1, 2023 and May 1, 2023:", usersInRange);
+  const InRange = await User.find({ createdAt: { $gte: new Date("2023-01-01"), $lt: new Date("2023-05-01") } });
+  console.log("Users created between January 1, 2023 and May 1, 2023:", InRange);
 }
 
 async function query12() {
@@ -73,9 +73,9 @@ async function query12() {
 }
 
 async function query13() {
-  const usersWithAnswers = await Answer.distinct("author");
-  const usersWithoutAnswers = await User.find({ _id: { $nin: usersWithAnswers } });
-  console.log("Users with no answers:", usersWithoutAnswers);
+  const WithAnswers = await Answer.distinct("author");
+  const WithoutAnswers = await User.find({ _id: { $nin: WithAnswers } });
+  console.log("Users with no answers:", WithoutAnswers);
 }
 
 async function query14() {
@@ -84,10 +84,10 @@ async function query14() {
 }
 
 async function query15() {
-  const userAnswerCounts = await Answer.aggregate([
+  const answerCounts = await Answer.aggregate([
     { $group: { _id: "$author", answerCount: { $sum: 1 } } }
   ]);
-  console.log("User IDs and their answer counts:", userAnswerCounts);
+  console.log("User IDs and their answer counts:", answerCounts);
 }
 
 async function query16() {
@@ -100,32 +100,32 @@ async function query16() {
 }
 
 async function query17() {
-  const updatedQuestion = await Question.findOneAndUpdate(
+  const updateQuestion = await Question.findOneAndUpdate(
     { title: "Why is my async function returning a promise instead of the actual value?" },
     { $set: { tags: ["javascript", "async"] } },
     { new: true }
   );
-  console.log("Updated question tags:", updatedQuestion);
+  console.log("Updated question tags:", updateQuestion);
 }
 
 async function query18() {
-  const updatedUser = await User.findOneAndUpdate(
+  const updateUser = await User.findOneAndUpdate(
     { email: "alice@example.com" },
     { $set: { name: "Alice Smith" } },
     { new: true }
   );
-  console.log("Updated user name:", updatedUser);
+  console.log("Updated user name:", updateUser);
 }
 
 async function query19() {
-  const deletedUser = await User.findOneAndDelete({ email: "jhonny@example.com" });
-  console.log("Deleted user:", deletedUser);
+  const deleteUser = await User.findOneAndDelete({ email: "jhonny@example.com" });
+  console.log("Deleted user:", deleteUser);
 }
 
 async function query20() {
   const user = await User.findOne({ email: "alice@example.com" });
-  const deletedAnswers = await Answer.deleteMany({ author: user._id });
-  console.log("Deleted answers from Alice:", deletedAnswers);
+  const deleteAnswers = await Answer.deleteMany({ author: user._id });
+  console.log("Deleted answers from Alice:", deleteAnswers);
 }
 
 async function runQueries() {
